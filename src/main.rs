@@ -1,6 +1,6 @@
 use clap::Parser;
-use std::env;
 use rgrep::search_directories;
+use std::env;
 /// Simple grep like CLI
 #[derive(Parser, Debug)]
 #[command(name = "rgrep")]
@@ -11,7 +11,7 @@ struct Cli {
     /// The search term for the CLI
     #[arg(short, long)]
     search_term: String,
-    
+
     ///The directory to search
     #[arg(short, long, default_value = ".")]
     directory: Option<String>,
@@ -19,7 +19,6 @@ struct Cli {
     /// The type of file (txt,log,out... etc)
     #[arg(short, long, default_value = "")]
     file_type: Option<String>,
-
 }
 
 fn main() {
@@ -28,6 +27,6 @@ fn main() {
     let search_term = cli.search_term;
     let directory = cli.directory.unwrap_or_else(|| current_dir);
     let file_type = cli.file_type.unwrap_or_else(|| ".*".to_string());
-    
+
     search_directories(&search_term, directory, &file_type)
 }
