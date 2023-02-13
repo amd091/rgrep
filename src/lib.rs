@@ -20,7 +20,9 @@ pub fn search_directories(search_term: &str, directory: String, file_type: &str)
                         return;
                     }
                 };
-                search_directories(search_term, directory.to_string(), file_type)
+                if is_not_hidden(directory) {
+                    search_directories(search_term, directory.to_string(), file_type);
+                }
             } else if entry_path.is_file() && entry_path.to_str().unwrap().ends_with(&file_type) {
                 match entry_path.to_str() {
                     Some(file_name) => string_search(file_name, search_term),
@@ -33,7 +35,7 @@ pub fn search_directories(search_term: &str, directory: String, file_type: &str)
     }
 }
 
-pub fn string_search(file_name: &str, search_term: &str) {
+fn string_search(file_name: &str, search_term: &str) {
     let file = match File::open(file_name) {
         Ok(f) => f,
         Err(e) => {
@@ -68,4 +70,9 @@ pub fn string_search(file_name: &str, search_term: &str) {
             );
         }
     }
+}
+
+fn is_not_hidden(directory: &str) -> bool {
+    let parts: Vec<&str> = directory.split('/').filter(|s| !s.is_empty()).collect();
+    !parts.iter().any(|s| s.starts_with("."))
 }
